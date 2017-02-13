@@ -30,3 +30,9 @@
 
 # Debug files
 *.dSYM/
+
+# Self 
+*.#1
+*.#2
+*.#3
+*.LST
