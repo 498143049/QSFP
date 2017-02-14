@@ -131,36 +131,58 @@ void interruptforRx()
 
 }
 //返回Temp16的地址
-#define  L_Temp_A   1.1 
-#define  L_Temp_B   1.1 
-#define  L_Vcc_A    1.1 
-#define  L_Vcc_B    1.1 
-uint16_t * GetTempValue()
+#define  L_Temp_A   1000 
+#define  L_Temp_B   1000 
+#define  L_Vcc_A    1000
+#define  L_Vcc_B    1000 
+
+//全局变量 
+
+uint8_t I_1;
+
+uint8_t * Get_I_Temp()
 {
-	//偏执电流与给的的a b 值
+	return &I_1;
 }
 //循环对模块进行检测
 void ModelInterruputer()
 {
     //L-Temp
-
+	Get_I_Temp(); //获取到值
+	SetFlagValue(I1,L_Temp);
 	//L-vcc 
+	SetFlagValue(V1,L_VCC);
 } 
 void Channelinterruputer()
 {
    //L-Rx Power 1234
-   //L-Tx Bias  1234
+   	SetFlagValue(I1,L_RX_1);
+	SetFlagValue(I1,L_RX_2);
+	SetFlagValue(I1,L_RX_3);
+	SetFlagValue(I1,L_RX_4);
+	//Tx_1234 
+	SetFlagValue(I2[0],L_TX_1);
+	SetFlagValue(I2[1],L_TX_2);
+	SetFlagValue(I2[3],L_TX_3);
+	SetFlagValue(I2[4],L_TX_4);
 }
-void ModelValueSet()
+
+/*void ModelValueSet()
 {
-	//Temperature  
+	//Temperature  byte23 判断大端/还是小端
+	int *point = &_data_Zeroth_Low[22];
+	*point=TempValue*I1;
 	//Supply Voltage Value
+	point=&_data_Zeroth_Low[26];
+	*point=vcc;
+
 }
 void ChannelValueSet()
 {
     //Rx 输入功率 
 	//Tx 的basis Value 
 }
+*/
 void Read_Operate(uint8_t address)
 {
 	//读完寄存器中断后需要清除中断
@@ -168,6 +190,7 @@ void Read_Operate(uint8_t address)
 //	{
 //		_data_Zeroth_Low[address]=0;  //读取完后清除中断位
 //	}
+	//如果是四通道收发器在对四通道收发器做处理
 	/*switch(address)
 	{
 		case  TX_RX_LOS_1_4:
@@ -415,11 +438,13 @@ uint8_t QSFP_writedatas(uint8_t address,uint8_t * ValueArray,uint8_t num)
 	return Succeed;
 		
 }
+//
 //get status  数组的顺序为 高提醒 低提醒 高警告
 uint8 GetValueStatus(uint8_t a,uint8_t b,uint16_t* array)
 {
    uint16_t targetValue = BaisValue*a+b;
    if(targetValue>array[0]){
+   		
      	return HighAlarm;
    }
    else if(targetValue>array[2])
@@ -438,4 +463,31 @@ uint8 GetValueStatus(uint8_t a,uint8_t b,uint16_t* array)
    {
    		return common;
    }
+}
+#define SetFlagValue(BaisValue,name)\
+{\
+		 uint16_t targetValue = BaisValue*#name##_A+#name##_B;\
+		 //这里可以写入检测值 只需要知道他的byte位数的宏就可以
+         //中断标志响应这里也需要完成 
+		 if(targetValue>#name##_HighAlarm)\
+		 { \
+		   HighAlarm;\
+		   //name_byte 设置中断标志位
+		 }\
+		else if(targetValue>#name##_HighWarning)
+   		{\
+			HighWarning;\	
+   		}\
+   		else if(targetValue<#name##_LowAlarm) \
+   		{\
+   			LowAlarm;\
+   		}\
+   		else if(targetValue<#name##_LowAlarm)\
+  		{\
+   	   		LowWarning;\	
+   		}\
+   		else\
+   		{\	
+   			common;\ //不进行任何处理 
+   		}\
 }
