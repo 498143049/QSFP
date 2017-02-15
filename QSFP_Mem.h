@@ -150,5 +150,5 @@ uint8_t Get_Data(uint8_t address);
 void Write_SingleData(uint8_t address,uint8_t DataValue);
 void interruptforTx();
 void interruptforRx();
-uint8 GetValueStatus(uint8_t a,uint8_t b,uint16_t* array);
+uint8_t GetValueStatus(uint8_t a,uint8_t b,uint16_t* array);
 #endif 

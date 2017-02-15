@@ -69,7 +69,7 @@ void interruptforTx()
 		if(comparebit(tempArray[tempValue],6,0)&&comparebit(tempArray[tempValue],2,1))
 		{
 			//  6(LOS)位=0,2位(LLOS)位=1 做&判断  则发生TX的LOS错误
-     		BIT_SET(_data_First_Low[TX_RX_LOS_1_4],L_Tx1_LOS+tempValue);   //给对应的值赋不同的值
+     		BIT_SET(_data_Zeroth_Low[TX_RX_LOS_1_4],L_Tx1_LOS+tempValue);   //给对应的值赋不同的值
 		}
 		//TX L-vcc  
 	/*	if(comparebit(tempArray[tempValue],5,1)&&comparebit(tempArray[tempValue],1,1))
@@ -92,7 +92,7 @@ void interruptforTx()
 		if(comparebit(tempArray[tempValue],3,0)||comparebit(tempArray[tempValue],2,0))	 
 		{
 			//同时为1触发LOS
-			BIT_SET(BIT_SET(_data_First_Low[TX_falut_1_4],L_Tx1_Fault+tempValue));     
+			BIT_SET(_data_Zeroth_Low[TX_falut_1_4],L_Tx1_Fault+tempValue);     
 		}
 		tempValue--;
 	}
@@ -113,22 +113,17 @@ void interruptforRx()
 		//同时为1触发LOS
 		if(comparebit(tempArray[tempValue],6,0)&&comparebit(tempArray[tempValue],2,1))	 
 		{		
-    		BIT_SET(BIT_SET(_data_First_Low[TX_RX_LOS_1_4],L_Rx1_LOS+tempValue));
+    		BIT_SET(_data_Zeroth_Low[TX_RX_LOS_1_4],L_Rx1_LOS+tempValue);
     	}
 		//同时为
 		if(comparebit(tempArray[tempValue],7,0)&&comparebit(tempArray[tempValue],2,1))	 
 		{		
-    		BIT_SET(BIT_SET(_data_First_Low[TX_RX_LOS_1_4],L_Rx1_LOS+tempValue));
+    		BIT_SET(_data_Zeroth_Low[TX_RX_LOS_1_4],L_Rx1_LOS+tempValue);
     	}
 
 
 		tempValue--;
 	}
-	//检查RX power中断 
-	//这个power中断产生问题
-
-
-
 }
 //返回Temp16的地址
 #define  L_Temp_A   1000 
@@ -138,11 +133,12 @@ void interruptforRx()
 
 //全局变量 
 
-uint8_t I_1;
+uint8_t I1;
+uint8_t I2[4]={0};
 
 uint8_t * Get_I_Temp()
 {
-	return &I_1;
+	return &I1;
 }
 //循环对模块进行检测
 void ModelInterruputer()
@@ -211,7 +207,7 @@ void WriteSet(uint8_t address,uint8_t Value)
 	}
 	else if(address==Tx_disable)
 	{
-	  //TX 通道使能  （字节写入）
+	  //TX 屏蔽通道使能  （字节写入）
 
 	}
 	else if(address==100)
@@ -242,6 +238,10 @@ void WriteSet(uint8_t address,uint8_t Value)
 	{
 		//Power Power Bais Tx 
 	}
+	else
+	{
+		
+	}
 	//通道中断的屏蔽 (可字节可序列)
 
 }
@@ -263,6 +263,7 @@ void FlashWriteOnebytes(uint16_t Base_address,uint8_t OffsetAddress,uint8_t *Dat
 	FLASH_PageErase(Base_address);
 	FLASH_WriteData(Base_address,Flash_data,ArrayLength);
 }
+//获取可读写设置
 uint8_t GetPrivilege(uint8_t address)
 {
 	if(address>=0&&address<86)
@@ -440,7 +441,7 @@ uint8_t QSFP_writedatas(uint8_t address,uint8_t * ValueArray,uint8_t num)
 }
 //
 //get status  数组的顺序为 高提醒 低提醒 高警告
-uint8 GetValueStatus(uint8_t a,uint8_t b,uint16_t* array)
+uint8_t GetValueStatus(uint8_t a,uint8_t b,uint16_t* array)
 {
    uint16_t targetValue = BaisValue*a+b;
    if(targetValue>array[0]){
