@@ -209,4 +209,15 @@ sfr16 TMR3RL =    0x92 ;  /*TIMER/COUNTER 3 RELOAD */
 sfr16 TMR3   =    0x94 ;  /*TIMER/COUNTER 3 COUNT */
 sfr16 TMR2RL   = 0xCA;                    // Timer2重新加载寄存器
 sfr16 TMR2     = 0xCC;                    // Timer2 计数器寄存器
+
+//增加 字段 
+sfr P2MDIN   = 0xF3; /*P2InputMOde*/ 
+sfr INT01CF  = 0xE4;
+sfr16 ADC0  = 0xBD;  
+  // ADC0 result  定义ADC的引脚 
+
+//可位访问的
+ sbit  IE_EX0 = IE^0  ;
+ sbit  IE_EX1 = IE^0 ;
+
 #endif /*__C8051F330_H */

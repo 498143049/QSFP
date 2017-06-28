@@ -2,7 +2,7 @@
 #include "c8051_flash.h"
 #include "journal.h"
 #include "c8051_i2c.h"
-extern uint8_t Flash_data[256];
+//extern uint8_t Flash_data[256];
 //
 uint8_t xdata ParameterStru[2];
 uint8_t GetOffset(uint16_t SetAddress)
@@ -15,8 +15,8 @@ uint8_t GetOffset(uint16_t SetAddress)
 		case RX_ParameterList :
 			return RxParametesNum;
 			break;
-		case UserDefine_ParameterList:
-			return UserDefineParametesNum;
+/*		case UserDefine_ParameterList:
+			return UserDefineParametesNum;*/
 			break;
 		default:
 			return 0;
@@ -32,9 +32,9 @@ uint16_t GetAddress(uint8_t offset)
 		case RxParametesNum:
 			return RX_ParameterList;
 		break;
-		case UserDefine_ParameterList:
+	/*	case UserDefine_ParameterList:
 			return UserDefine_ParameterList;
-		break;
+		break;*/
 		default:
 			return 0;
 	}
@@ -94,7 +94,8 @@ uint8_t AddParameter(uint16_t SetAddress,uint8_t address,uint8_t value)
 	updateConfig(kindtype,ParaNum);
 	return 1;
 }
-void Init_TX_Parameters()
+
+/*void Init_TX_Parameters()
 {
 	uint8_t ParaNum = FLASH_ByteRead(ConfigAddr+TxParametesNum);
 	FLASH_ReadData(TX_ParameterList,Flash_data,ParaNum*2);  
@@ -109,10 +110,10 @@ void Init_Rx_Parameters()
 	FLASH_ReadData(RX_ParameterList,Flash_data,ParaNum*2);  
 	while(--ParaNum>0)
 	{
-		RX_I2C_SingleByteWrite(HXR6104Address,Flash_data[ParaNum-1],Flash_data[ParaNum]);
+		RX_read(HXR6104Address,Flash_data[ParaNum-1],Flash_data[ParaNum]);
 	}
 }
 void Init_User_define()
 {
 
-}
+}*/

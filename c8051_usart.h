@@ -4,7 +4,7 @@
 #define __C8051_USART_H
 
 //串口0波特率的设置为9600
-#define  BAUDRATE 9600  
+#define  BAUDRATE 56000  
 #define  BITNUMS 10  		//一次传输 10 个字符 
 
 

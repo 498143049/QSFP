@@ -10,26 +10,25 @@
 //extern uint8_t xdata Flash_data[256];
 uint8_t Read_Rx(uint8_t lowAddress)
 {
-	return RX_I2C_SingleByteRead(HXR6104Address,lowAddress);
+	return RX_read(lowAddress);
 }
 uint8_t Read_Tx(uint8_t lowAddress)
 {
-	return TX_I2C_SingleByteRead(HXT6104Address,lowAddress);
+	return TX_read(lowAddress);
 }
 uint8_t Write_Rx(uint8_t lowAddress,uint8_t Data)
 {
-   RX_I2C_SingleByteWrite(HXR6104Address,lowAddress,Data);
-   if(Data==RX_I2C_SingleByteRead(HXR6104Address,lowAddress))
+   RX_write(lowAddress,Data);
+   if(Data==RX_read(lowAddress))
    		return 1;
 	else
 		return 0;
 }
-uint8_t tempi=0;
 uint8_t Write_Tx(uint8_t lowAddress,uint8_t Data)
 {
 
-   TX_I2C_SingleByteWrite(HXT6104Address,lowAddress,Data);
-   if(Data==TX_I2C_SingleByteRead(HXT6104Address,lowAddress))
+   TX_write(lowAddress,Data);
+   if(Data==TX_read(lowAddress))
    		return 1;
 	else
 		return 0;

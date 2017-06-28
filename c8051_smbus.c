@@ -12,12 +12,12 @@
 /**********初始化为从机模式*******************/
 void SMBus_Init(void)
 {
-	SMB0CF |= 0x98;   //使能SMBus总线，从机模式，SDA数据使能,Timer 0作为时钟源 //使能检测
-	SMB0CF |= 0x80;   //使能SMBus总线
+    SMB0CF |= 0x98; //使能SMBus总线，从机模式，SDA数据使能,Timer 0作为时钟源 //使能检测
+    SMB0CF |= 0x80; //使能SMBus总线
 }
 void SMBus_ReSet(void)
 {
-	STA = 0;
+    STA = 0;
     STO = 0;
-    ACK = 0;	
+    ACK = 0;
 }
